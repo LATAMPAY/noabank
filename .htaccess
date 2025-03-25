@@ -1,0 +1,40 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+
+# Handle Front Controller Pattern
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.html [QSA,L]
+
+# Force HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Set PHP version
+AddHandler application/x-httpd-php81 .php
+
+# Security Headers
+Header set X-Content-Type-Options "nosniff"
+Header set X-XSS-Protection "1; mode=block"
+Header set X-Frame-Options "SAMEORIGIN"
+Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Enable CORS
+Header set Access-Control-Allow-Origin "*"
+</IfModule>
+
+# PHP Configuration
+php_value upload_max_filesize 10M
+php_value post_max_size 10M
+php_value memory_limit 256M
+php_value max_execution_time 300
+
+# Disable directory listing
+Options -Indexes
+
+# Protect sensitive files
+<FilesMatch "^\.(htaccess|htpasswd|ini|log|sh|inc|bak)$">
+Order Allow,Deny
+Deny from all
+</FilesMatch>
