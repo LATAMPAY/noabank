@@ -10,7 +10,7 @@ NOA-BANK es una plataforma de servicios bancarios que ofrece soluciones financie
 
 1. Clona el repositorio:
 ```bash
-git clone https://github.com/[tu-usuario]/noa-bank.git
+git clone https://github.com/LATAMPAY/noabank.git
 cd noa-bank
 ```
 
