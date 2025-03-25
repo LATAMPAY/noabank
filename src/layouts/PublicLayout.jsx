@@ -1,87 +1,36 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { Box, Container, AppBar, Toolbar, Typography, Button, Stack } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Box, AppBar, Toolbar, Typography, Button, Container } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
 const PublicLayout = () => {
-  const navigate = useNavigate();
-
-  const navItems = [
-    { label: 'Inicio', path: '/' },
-    { label: 'Productos', path: '/products' },
-    { label: 'Servicios', path: '/services' },
-    { label: 'Sucursales', path: '/branches' },
-    { label: 'Noticias', path: '/news' },
-    { label: 'Contacto', path: '/contact' },
-  ];
-
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <AppBar position="sticky" color="primary" elevation={0}>
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ cursor: 'pointer' }}
-            onClick={() => navigate('/')}
-          >
-            NOA BANK
+    <>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" component={RouterLink} to="/" sx={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}>
+            NOA Bank
           </Typography>
-
-          <Stack direction="row" spacing={2}>
-            {navItems.map((item) => (
-              <Button
-                key={item.path}
-                color="inherit"
-                onClick={() => navigate(item.path)}
-              >
-                {item.label}
-              </Button>
-            ))}
-          </Stack>
-
-          <Stack direction="row" spacing={2}>
-            <Button
-              color="inherit"
-              variant="outlined"
-              onClick={() => navigate('/login')}
-            >
-              Iniciar Sesión
-            </Button>
-            <Button
-              color="secondary"
-              variant="contained"
-              onClick={() => navigate('/register')}
-            >
-              Registrarse
-            </Button>
-          </Stack>
+          <Button color="inherit" component={RouterLink} to="/products">
+            Productos
+          </Button>
+          <Button color="inherit" component={RouterLink} to="/services">
+            Servicios
+          </Button>
+          <Button color="inherit" component={RouterLink} to="/contact">
+            Contacto
+          </Button>
+          <Button color="inherit" component={RouterLink} to="/login">
+            Iniciar Sesión
+          </Button>
         </Toolbar>
       </AppBar>
-
-      <Box component="main" sx={{ flexGrow: 1 }}>
-        <Outlet />
-      </Box>
-
-      <Box
-        component="footer"
-        sx={{
-          py: 3,
-          px: 2,
-          mt: 'auto',
-          backgroundColor: (theme) =>
-            theme.palette.mode === 'light'
-              ? theme.palette.grey[200]
-              : theme.palette.grey[800],
-        }}
-      >
-        <Container maxWidth="lg">
-          <Typography variant="body2" color="text.secondary" align="center">
-            © {new Date().getFullYear()} NOA BANK Argentina. Todos los derechos reservados.
-          </Typography>
-        </Container>
-      </Box>
-    </Box>
+      <Container>
+        <Box sx={{ mt: 4 }}>
+          <Outlet />
+        </Box>
+      </Container>
+    </>
   );
 };
 

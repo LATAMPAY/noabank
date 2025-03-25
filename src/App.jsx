@@ -13,8 +13,6 @@ import Home from './pages/public/Home';
 import Products from './pages/public/Products';
 import Services from './pages/public/Services';
 import Contact from './pages/public/Contact';
-import Branches from './pages/public/Branches';
-import News from './pages/public/News';
 
 // Auth pages
 import Login from './pages/auth/Login';
@@ -25,22 +23,13 @@ import ForgotPassword from './pages/auth/ForgotPassword';
 import Dashboard from './pages/client/Dashboard';
 import Accounts from './pages/client/Accounts';
 import Transfers from './pages/client/Transfers';
-import Bills from './pages/client/Bills';
-import Investments from './pages/client/Investments';
-import Loans from './pages/client/Loans';
-import Cards from './pages/client/Cards';
 import Statements from './pages/client/Statements';
-import Support from './pages/client/Support';
 
 // Admin portal pages
 import AdminDashboard from './pages/admin/Dashboard';
 import UserManagement from './pages/admin/UserManagement';
 import TransactionMonitoring from './pages/admin/TransactionMonitoring';
-import RiskManagement from './pages/admin/RiskManagement';
-import Reports from './pages/admin/Reports';
-import CustomerService from './pages/admin/CustomerService';
 import SystemConfig from './pages/admin/SystemConfig';
-import AuditLogs from './pages/admin/AuditLogs';
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -55,8 +44,6 @@ const App = () => {
           <Route path="/products" element={<Products />} />
           <Route path="/services" element={<Services />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/branches" element={<Branches />} />
-          <Route path="/news" element={<News />} />
         </Route>
 
         {/* Auth routes */}
@@ -73,12 +60,7 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/accounts" element={<Accounts />} />
           <Route path="/transfers" element={<Transfers />} />
-          <Route path="/bills" element={<Bills />} />
-          <Route path="/investments" element={<Investments />} />
-          <Route path="/loans" element={<Loans />} />
-          <Route path="/cards" element={<Cards />} />
           <Route path="/statements" element={<Statements />} />
-          <Route path="/support" element={<Support />} />
         </Route>
 
         {/* Admin portal routes */}
@@ -94,11 +76,7 @@ const App = () => {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/users" element={<UserManagement />} />
           <Route path="/admin/transactions" element={<TransactionMonitoring />} />
-          <Route path="/admin/risk" element={<RiskManagement />} />
-          <Route path="/admin/reports" element={<Reports />} />
-          <Route path="/admin/customer-service" element={<CustomerService />} />
           <Route path="/admin/config" element={<SystemConfig />} />
-          <Route path="/admin/audit" element={<AuditLogs />} />
         </Route>
 
         {/* Fallback route */}
