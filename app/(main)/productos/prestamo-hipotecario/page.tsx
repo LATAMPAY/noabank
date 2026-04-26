@@ -25,7 +25,14 @@ export default function PrestamoHipotecarioPage() {
 
       <section className="mt-12 bg-gray-50 p-6 rounded-lg">
         <h2 className="text-2xl font-bold mb-6">Simulador de Préstamo Hipotecario</h2>
-        <LoanCalculator maxAmount={50000000} maxTerm={360} minRate={45} maxRate={65} />
+        <LoanCalculator 
+          minAmount={5000000}
+          maxAmount={50000000} 
+          minTerm={60}
+          maxTerm={360} 
+          interestRate={55}
+          title="Simulador Préstamo Hipotecario"
+        />
       </section>
     </main>
   )

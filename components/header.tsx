@@ -8,8 +8,6 @@ import { Menu, X, ChevronDown, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-// Eliminar esta línea
-// import { LanguageSelector } from "./language-selector"
 
 const mainNav = [
   {

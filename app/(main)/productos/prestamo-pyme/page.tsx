@@ -24,7 +24,13 @@ export default function PrestamoPymePage() {
 
       <section className="mt-12 bg-gray-50 p-6 rounded-lg">
         <h2 className="text-2xl font-bold mb-6">Simulador de Préstamo PyME</h2>
-        <LoanCalculator maxAmount={20000000} maxTerm={60} minRate={55} maxRate={75} />
+        <LoanCalculator 
+          minAmount={1000000}
+          maxAmount={20000000} 
+          maxTerm={60} 
+          interestRate={65}
+          title="Simulador Préstamo PyME"
+        />
       </section>
     </main>
   )

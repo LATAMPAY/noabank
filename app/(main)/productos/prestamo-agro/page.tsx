@@ -24,7 +24,13 @@ export default function PrestamoAgroPage() {
 
       <section className="mt-12 bg-gray-50 p-6 rounded-lg">
         <h2 className="text-2xl font-bold mb-6">Simulador de Préstamo Agro</h2>
-        <LoanCalculator maxAmount={30000000} maxTerm={72} minRate={50} maxRate={70} />
+        <LoanCalculator 
+          minAmount={1000000}
+          maxAmount={30000000} 
+          maxTerm={72} 
+          interestRate={60}
+          title="Simulador Préstamo Agro"
+        />
       </section>
 
       <section>
