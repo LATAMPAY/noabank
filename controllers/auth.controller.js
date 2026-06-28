@@ -1,121 +1,117 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const bcrypt = require('bcryptjs');
+const { query } = require('../db');
+
+const JWT_SECRET = process.env.JWT_SECRET || 'noa-bank-dev-secret';
+
+const signToken = (user) =>
+  jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: '24h' });
+
+const publicUser = (u) => ({
+  id: u.id,
+  name: u.name,
+  email: u.email,
+  role: u.role,
+  status: u.status,
+});
 
 exports.register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { firstName, lastName, password } = req.body;
+    const email = (req.body.email || '').toLowerCase().trim();
+    // The frontend may send `name` or split first/last name fields.
+    const name =
+      req.body.name ||
+      [firstName, lastName].filter(Boolean).join(' ').trim();
 
-    // Verificar si el usuario ya existe
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
-        message: 'El email ya está registrado'
+        message: 'Nombre, email y contraseña son requeridos',
       });
     }
 
-    // Crear nuevo usuario
-    const user = await User.create({
-      name,
-      email,
-      password
-    });
+    const existing = await query('SELECT id FROM users WHERE email = $1', [email]);
+    if (existing.rows.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'El email ya está registrado',
+      });
+    }
 
-    // Generar token
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: '24h' }
+    const hashed = await bcrypt.hash(password, 10);
+    const { rows } = await query(
+      `INSERT INTO users (name, email, password, role, status, last_login)
+       VALUES ($1, $2, $3, 'client', 'active', now())
+       RETURNING id, name, email, role, status`,
+      [name, email, hashed]
     );
 
+    const user = rows[0];
     res.status(201).json({
       success: true,
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      }
+      token: signToken(user),
+      user: publicUser(user),
     });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: 'Error al registrar usuario',
-      error: error.message
+      error: error.message,
     });
   }
 };
 
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const email = (req.body.email || '').toLowerCase().trim();
+    const { password } = req.body;
 
-    // Verificar si el usuario existe
-    const user = await User.findOne({ email }).select('+password');
+    const { rows } = await query('SELECT * FROM users WHERE email = $1', [email]);
+    const user = rows[0];
+
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Credenciales inválidas'
+        message: 'Credenciales inválidas',
       });
     }
 
-    // Verificar contraseña
-    const isMatch = await user.comparePassword(password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({
         success: false,
-        message: 'Credenciales inválidas'
+        message: 'Credenciales inválidas',
       });
     }
 
-    // Actualizar último login
-    user.lastLogin = new Date();
-    await user.save();
-
-    // Generar token
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: '24h' }
-    );
+    await query('UPDATE users SET last_login = now() WHERE id = $1', [user.id]);
 
     res.json({
       success: true,
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      }
+      token: signToken(user),
+      user: publicUser(user),
     });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: 'Error al iniciar sesión',
-      error: error.message
+      error: error.message,
     });
   }
 };
 
 exports.getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
     res.json({
       success: true,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      }
+      user: publicUser(req.user),
     });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: 'Error al obtener información del usuario',
-      error: error.message
+      error: error.message,
     });
   }
-}; 
+};

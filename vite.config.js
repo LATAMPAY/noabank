@@ -6,12 +6,20 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: process.env.PORT || 3000,
-    host: true
+    host: true,
+    // Proxy API requests to the Express backend so the browser only ever
+    // talks to the Vite origin (avoids CORS / hard-coded localhost issues).
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    },
   },
   build: {
     outDir: 'dist',
     sourcemap: false,
-    minify: 'terser',
+    minify: 'esbuild',
     chunkSizeWarningLimit: 1600,
     rollupOptions: {
       output: {
